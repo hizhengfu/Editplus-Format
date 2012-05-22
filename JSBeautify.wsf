@@ -1,0 +1,65 @@
+<job id="JSBeautify">
+<script src="beautify.js" language="JScript"></script>
+<script src="beautify-css.js" language="JScript"></script>
+<script src="beautify-html.js" language="JScript"></script>
+<script src="format-sql.js" language="JScript"></script>
+<script src="format-css.js" language="JScript"></script>
+<script language="JScript">
+	var opts = {
+			indent_size: '4',//缩进1的时候表示tab，其它数字表示多少个空格
+			indent_char: ' ',//缩进字符
+			preserve_newlines:false,//是否替换新行
+			insert_newlines:false,//css中是否插入新行
+			brace_style: 'collapse',
+			indent_scripts:'normal',
+			jslint_happy: true,
+			keep_array_indentation:false,//保留数组格式
+			space_after_anon_function:true,
+			space_before_conditional:true			
+	};
+	var args = WScript.Arguments;
+	var filepath = args(0)||'';
+	if(args.length>0) {
+		var stream = new ActiveXObject("ADODB.Stream"),
+			source='',
+			result='';
+		
+		stream.Mode = 3;  // 常用值 1:读，2:写，3:读写
+		stream.Type = 2;  // 1:二进制，2:文本(默认)
+		stream.Charset = 'UTF-8';  // 指定编码
+		stream.Open();
+		stream.LoadFromFile(filepath);
+		source = stream.ReadText(-1);  // 读取全部内容
+		stream.Close();
+		
+		var extension=filepath.substring(filepath.lastIndexOf('.')+1,filepath.length);
+		switch (extension) {
+			case 'js':
+			case 'vb':
+			case 'wsf':
+				result=js_beautify(source, opts);
+				break;
+			case 'html':
+			case 'htm':
+				opts.max_char='120';
+				opts.unformatted=['a', 'sub', 'sup', 'b', 'i', 'u'];
+				result=style_html(source, opts);
+				break;
+			case 'css':
+				result=css_beautify(source, opts);
+				break;	
+			case 'sql':
+				result=formatSql(source, opts);
+				break;	
+			default:
+				result=formatCss(source, opts);
+				break;
+		}
+		WScript.StdOut.Write(result);
+	}else{
+		//调试可以用下面这个来查看运行情况
+		WScript.Echo("Are you sure your input is javascript source file?");
+	}
+	WScript.Quit();
+</script>
+</job>
