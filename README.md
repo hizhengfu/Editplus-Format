@@ -11,3 +11,5 @@ Argument: $(FilePath)
 Action: Run as Text(Replace)
 
 本例保存文件在安装文件夹filters目录下。
+
+目前只支持utf-8,没找到editplus字符编码的api不然适用范围就比较广。
