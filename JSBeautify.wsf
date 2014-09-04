@@ -59,7 +59,6 @@
 	}else{
         	var stdin  = WScript.StdIn;
         	var stdout = WScript.StdOut;
-        	var xml = WScript.createObject("MSXML2.DomDocument.6.0");
         	var result = stdin.ReadAll();
         	result = js_beautify(result, opts);
         	stdout.Write(result);
