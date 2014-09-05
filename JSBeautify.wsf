@@ -18,8 +18,8 @@
 			space_before_conditional:true			
 	};
 	var args = WScript.Arguments;
-	var filepath = args(0)||'';
 	if(args.length>0) {
+    	var filepath = args(0)||'';
 		var stream = new ActiveXObject("ADODB.Stream"),
 			source='',
 			result='';
@@ -57,8 +57,11 @@
 		}
 		WScript.StdOut.Write(result);
 	}else{
-		//调试可以用下面这个来查看运行情况
-		WScript.Echo("Are you sure your input is javascript source file?");
+        	var stdin  = WScript.StdIn;
+        	var stdout = WScript.StdOut;
+        	var result = stdin.ReadAll();
+        	result = js_beautify(result, opts);
+        	stdout.Write(result);
 	}
 	WScript.Quit();
 </script>
